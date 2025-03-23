@@ -33,7 +33,7 @@ terraform.rc
 # Lambda build artifacts
 #modules/compute/src/lambda_layer.zip
 #modules/compute/src/python/
-#modules/compute/deployment-package.zip
+modules/compute/deployment-package.zip
 
 # Local development
 .DS_Store
