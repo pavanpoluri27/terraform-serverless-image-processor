@@ -15,7 +15,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   statistic           = "Sum"
   threshold           = 0
   alarm_description   = "This metric monitors lambda function errors"
-  
+
   dimensions = {
     FunctionName = var.lambda_function_name
   }

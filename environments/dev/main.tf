@@ -34,7 +34,7 @@ module "compute" {
 # API Module
 module "api" {
   source = "../../modules/api"
-  
+
   # Passing the necessary variables
   project_name         = local.project_name
   environment          = local.environment

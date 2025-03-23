@@ -47,7 +47,7 @@ resource "aws_iam_policy" "lambda_policy" {
           "dynamodb:UpdateItem",
           "dynamodb:Query"
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = var.dynamodb_table_arn
       },
       # Creating logs for CloudWatch
@@ -57,7 +57,7 @@ resource "aws_iam_policy" "lambda_policy" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Effect = "Allow"
+        Effect   = "Allow"
         Resource = "arn:aws:logs:*:*:*"
       }
     ]
@@ -72,9 +72,9 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 
 # Create a Lambda layer for Python dependencies
 resource "aws_lambda_layer_version" "dependencies_layer" {
-  layer_name = "${var.project_name}-${var.environment}-dependencies"
+  layer_name          = "${var.project_name}-${var.environment}-dependencies"
   compatible_runtimes = ["python3.9"]
-  
+
   filename = "${path.module}/src/lambda_layer.zip"
 }
 
