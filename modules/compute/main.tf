@@ -45,7 +45,8 @@ resource "aws_iam_policy" "lambda_policy" {
           "dynamodb:PutItem",
           "dynamodb:GetItem",
           "dynamodb:UpdateItem",
-          "dynamodb:Query"
+          "dynamodb:Query",
+          "dynamodb:Scan"
         ]
         Effect   = "Allow"
         Resource = var.dynamodb_table_arn
