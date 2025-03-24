@@ -4,11 +4,21 @@ import os
 import uuid
 import json
 from datetime import datetime
+from decimal import Decimal
 
 # Initialize AWS clients
 s3_client = boto3.client('s3')
 dynamodb_client = boto3.client('dynamodb')
 dynamodb_resource = boto3.resource('dynamodb')
+
+# Custom JSON encoder to handle Decimal types
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super(DecimalEncoder, self).default(obj)
 
 # Environment variables from Lambda function resource
 PROCESSED_BUCKET = os.environ['PROCESSED_BUCKET']
@@ -16,12 +26,11 @@ METADATA_TABLE = os.environ['METADATA_TABLE']
 
 def handler(event, context):
     try:
-        # Check if this is an API Gateway or S3 event
+        # API Gateway event
         if 'Records' not in event:
-            # This is an API Gateway event
             return handle_api_request(event)
         else:
-            # This is an S3 event
+            # S3 event
             return handle_s3_event(event)
             
     except Exception as e:
@@ -35,11 +44,11 @@ def handler(event, context):
             },
             'body': json.dumps({
                 'error': str(e)
-            })
+            }, cls=DecimalEncoder)
         }
 
 def handle_api_request(event):
-    # Handle requests coming from API Gateway
+    #Handle requests coming from API Gateway
     print(f"Received API Gateway event: {json.dumps(event)}")
     
     # Get HTTP method from the event
@@ -62,7 +71,7 @@ def handle_api_request(event):
             },
             'body': json.dumps({
                 'images': items
-            })
+            }, cls=DecimalEncoder)
         }
     else:
         # Return error for unsupported methods
@@ -74,11 +83,11 @@ def handle_api_request(event):
             },
             'body': json.dumps({
                 'error': f'Unsupported method: {http_method}'
-            })
+            }, cls=DecimalEncoder)
         }
 
 def handle_s3_event(event):
-    # Handle events from S3 bucket notifications
+    #Handle events from S3 bucket notifications
     # Get the object from the event
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = event['Records'][0]['s3']['object']['key'].replace('+', ' ')
@@ -133,5 +142,5 @@ def handle_s3_event(event):
         'body': json.dumps({
             'message': 'Image processed successfully',
             'imageId': image_id
-        })
+        }, cls=DecimalEncoder)
     }
