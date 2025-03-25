@@ -63,19 +63,7 @@ cd terraform-serverless-image-processor
 aws configure
 ```
 
-### 3. Create the Python Lambda layer manually
-
-Before deploying with Terraform, create the Lambda layer structure manually:
-
-```bash
-cd modules/compute/src
-mkdir -p python/lib/python3.9/site-packages
-pip install -r requirements.txt -t python/lib/python3.9/site-packages
-zip -r lambda_layer.zip python
-cd ../../../
-```
-
-### 4. Deploy the infrastructure
+### 3. Deploy the infrastructure
 
 ```bash
 cd environments/dev
@@ -84,7 +72,7 @@ terraform plan
 terraform apply
 ```
 
-### 5. Test the image processing pipeline
+### 4. Test the image processing pipeline
 
 After deployment, use the provided script to upload test images:
 
@@ -93,7 +81,7 @@ chmod +x scripts/upload_test_images.sh
 ./scripts/upload_test_images.sh $(terraform output -raw upload_bucket_name)
 ```
 
-### 6. Access the processed images
+### 5. Access the processed images
 
 You can view the processed images through the AWS console or using the deployed API:
 
@@ -101,7 +89,7 @@ You can view the processed images through the AWS console or using the deployed 
 API URL: $(terraform output -raw api_url)/images
 ```
 
-### 7. Monitor the process
+### 6. Monitor the process
 
 Access the CloudWatch dashboard using the generated URL:
 
